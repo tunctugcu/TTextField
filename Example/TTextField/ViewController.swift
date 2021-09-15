@@ -7,18 +7,46 @@
 //
 
 import UIKit
+import TTextField
 
-class ViewController: UIViewController {
-
+final class ViewController: UIViewController {
+    @IBOutlet private weak var uiTextField: TTextField!
+    
+    private let textField = TTextField()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        uiTextField.text = "Initialized from XIB"
+        uiTextField.hint = "I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!"
+        setupTextField()
+        textField.text = "Programmatically done"
+        textField.hint = "I have hint here 2"
+        
+        setupTestFrames()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    private func setupTextField() {
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(textField)
+        
+        NSLayoutConstraint.activate([
+            textField.topAnchor.constraint(equalTo: uiTextField.bottomAnchor, constant: 10),
+            textField.leadingAnchor.constraint(equalTo: uiTextField.leadingAnchor),
+            textField.trailingAnchor.constraint(equalTo: uiTextField.trailingAnchor)
+        ])
     }
-
+    
+    private func setupTestFrames() {
+        uiTextField.layer.borderColor = UIColor.brown.cgColor
+        uiTextField.layer.borderWidth = 1
+        
+        textField.layer.borderWidth = 2
+        textField.layer.borderColor = UIColor.blue.cgColor
+    }
+    
+    @IBAction private func toggleHint() {
+        uiTextField.hintIsHidden.toggle()
+    }
+    
 }
 

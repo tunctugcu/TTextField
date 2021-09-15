@@ -1,0 +1,22 @@
+{
+  "name": "TTextField",
+  "version": "1.0.0",
+  "summary": "A short description of TTextField.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/tunctugcu/TTextField",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Tunc Tugcu": "tunctugcu@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/Tunc Tugcu/TTextField.git",
+    "tag": "1.0.0"
+  },
+  "platforms": {
+    "ios": "11.0"
+  },
+  "source_files": "TTextField/Classes/**/*"
+}

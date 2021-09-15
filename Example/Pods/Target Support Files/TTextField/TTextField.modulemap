@@ -1,0 +1,6 @@
+framework module TTextField {
+  umbrella header "TTextField-umbrella.h"
+
+  export *
+  module * { export * }
+}
