@@ -8,12 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		1B0291D1F2B822E070BCF5AA /* Pods_TTextField_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2DECA58647155B939BE9D42 /* Pods_TTextField_Example.framework */; };
+		48D8940B27010316000D4D0C /* TTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48D8940A27010316000D4D0C /* TTextFieldTests.swift */; };
+		48D894142701BEC5000D4D0C /* IBExample.xib in Resources */ = {isa = PBXBuildFile; fileRef = 48D894132701BEC5000D4D0C /* IBExample.xib */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
 		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
-		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		D85FE6E5BB5A86A0A64B0889 /* Pods_TTextField_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 356197A90A5CD1F6D744343F /* Pods_TTextField_Tests.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,8 @@
 		12334A530CAD22D2DB4E6046 /* Pods-TTextField_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTextField_Tests.debug.xcconfig"; path = "Target Support Files/Pods-TTextField_Tests/Pods-TTextField_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		356197A90A5CD1F6D744343F /* Pods_TTextField_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TTextField_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		372E436285D86CA5EE8DCC8E /* Pods-TTextField_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTextField_Tests.release.xcconfig"; path = "Target Support Files/Pods-TTextField_Tests/Pods-TTextField_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		48D8940A27010316000D4D0C /* TTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TTextFieldTests.swift; sourceTree = "<group>"; };
+		48D894132701BEC5000D4D0C /* IBExample.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IBExample.xib; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* TTextField_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TTextField_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -41,7 +44,6 @@
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* TTextField_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TTextField_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		712D59106A0E60AD402C75BF /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		922F3B5F398B8CB04A7B5D35 /* Pods-TTextField_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTextField_Example.debug.xcconfig"; path = "Target Support Files/Pods-TTextField_Example/Pods-TTextField_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		A1CDAC2010FBF8B9F307542A /* Pods-TTextField_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTextField_Example.release.xcconfig"; path = "Target Support Files/Pods-TTextField_Example/Pods-TTextField_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -126,8 +128,9 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
+				48D8940A27010316000D4D0C /* TTextFieldTests.swift */,
+				48D894132701BEC5000D4D0C /* IBExample.xib */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48D894142701BEC5000D4D0C /* IBExample.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,7 +344,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				48D8940B27010316000D4D0C /* TTextFieldTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
