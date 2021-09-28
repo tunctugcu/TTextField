@@ -18,10 +18,11 @@ final class ViewController: UIViewController {
         super.viewDidLoad()
         uiTextField.text = "Initialized from XIB"
         uiTextField.hint = "I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!I have hint here, I have hint here I have hint here, I have hint here!!!!!"
+        uiTextField.placeholder = "UI placeholder"
         setupTextField()
         textField.text = "Programmatically done"
         textField.hint = "I have hint here 2"
-        
+        textField.placeholder = "Placeholder"
         setupTestFrames()
     }
     
