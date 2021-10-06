@@ -7,7 +7,7 @@
 
 import UIKit
 
-public final class TTextField: UITextField {
+open class TTextField: UITextField {
 
     public enum PlaceholderMode {
         /// The default behavior of `UITextField`
@@ -24,6 +24,10 @@ public final class TTextField: UITextField {
     }
 
     private enum Constant {
+        
+        static let heightMeasurementSampleText = "X"
+        static let horizontalSpacing: CGFloat = 5.0
+
         enum Separator {
             static let accessibiliyIdentifier = "Separator"
             static let height: CGFloat = 1/3
@@ -31,34 +35,44 @@ public final class TTextField: UITextField {
         
         enum Hint {
             static let accessibiliyIdentifier = "Hint"
-            static let verticalPadding: CGFloat = 0
+            static let defaultOffset: CGFloat = 0
         }
         
         enum Placeholder {
             static let accessibiliyIdentifier = "Placeholder"
-            static let verticalPadding: CGFloat = 0.0
+            static let defaultOffset: CGFloat = 0.0
         }
     }
 
-    override public var text: String? {
+    override open var text: String? {
         didSet {
                 updatePlaceholderConstraints()
         }
     }
 
     private var padding: UIEdgeInsets {
-        var bottomInset = Constant.Separator.height
+        var bottomInset = Constant.Separator.height + bottomTextPadding
         
         if hintAvailable {
             bottomInset += hintLabelHeight
         }
 
-        return UIEdgeInsets(top: placeholderOnTopRectHeight,
-                            left: 0,
+        return UIEdgeInsets(top: placeholderOnTopRectHeight + topTextPadding,
+                            left: leftPadding,
                             bottom: bottomInset,
-                            right: 0)
+                            right: rightPadding)
     }
-    
+
+    private var leftPadding: CGFloat {
+        guard layoutDirection == .rightToLeft, rightView != nil else { return .zero }
+        return leftViewRect(forBounds: bounds).maxX + Constant.horizontalSpacing
+    }
+
+    private var rightPadding: CGFloat {
+        guard layoutDirection == .leftToRight, rightView != nil else { return .zero }
+        return bounds.width - rightViewRect(forBounds: bounds).minX + Constant.horizontalSpacing
+    }
+
     // MARK: - Properties
     public override var placeholder: String? {
         get { return placeholderLabel.text }
@@ -133,14 +147,51 @@ public final class TTextField: UITextField {
             invalidateIntrinsicContentSize()
         }
     }
+
+    public override var textAlignment: NSTextAlignment {
+        didSet {
+            placeholderLabel.textAlignment = textAlignment
+            hintLabel.textAlignment = textAlignment
+        }
+    }
+
+    public var layoutDirection: UIUserInterfaceLayoutDirection = .leftToRight {
+        didSet {
+            setNeedsLayout()
+        }
+    }
+
+    @IBInspectable public var hasIntrinsicHeight: Bool = true
+
+    @IBInspectable public var hintOffset: CGFloat = Constant.Hint.defaultOffset {
+        didSet {
+            updateBottomConstraints()
+        }
+    }
+
+    @IBInspectable public var onTopPlaceholderOffset: CGFloat = Constant.Placeholder.defaultOffset {
+        didSet {
+            updatePlaceholderConstraints()
+        }
+    }
     
+    @IBInspectable public var bottomTextPadding: CGFloat = .zero {
+        didSet {
+            updatePlaceholderConstraints()
+        }
+    }
+
+    @IBInspectable public var topTextPadding: CGFloat = .zero {
+        didSet {
+            updatePlaceholderConstraints()
+        }
+    }
+
     // MARK: - Private properties
 
-    private lazy var hintLabelHeightConstraint: NSLayoutConstraint = hintLabel.heightAnchor.constraint(equalToConstant: 0)
     private lazy var separatorBottomConstraint = separator.bottomAnchor.constraint(equalTo: bottomAnchor)
-    private lazy var placeholderTopConstraint = placeholderLabel.topAnchor.constraint(equalTo: topAnchor)
-    private lazy var placeholderLabelHeightConstraint: NSLayoutConstraint = placeholderLabel.heightAnchor.constraint(equalToConstant: 0)
-    private lazy var placeholderBottomConstraint = placeholderLabel.bottomAnchor.constraint(equalTo: separator.topAnchor)
+    private lazy var placeholderLabelBottomConstraint = placeholderLabel.bottomAnchor.constraint(equalTo: separator.topAnchor)
+    private lazy var placeholderLabelTopConstraint = placeholderLabel.topAnchor.constraint(equalTo: topAnchor)
     
     // MARK: - Views
     private let separator = UIView()
@@ -160,6 +211,7 @@ public final class TTextField: UITextField {
         setup()
     }
     
+    
     // MARK: - Setup
     private func setup() {
         setContentHuggingPriority(.defaultHigh, for: .vertical)
@@ -174,8 +226,9 @@ public final class TTextField: UITextField {
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(textFieldChanged(_:)),
-                                               name: NSNotification.Name.UITextFieldTextDidChange,
+                                               name: UITextField.textDidChangeNotification,
                                                object: self)
+
     }
     
     // MARK: - Setup Elements
@@ -209,7 +262,6 @@ public final class TTextField: UITextField {
     private func setupConstraints() {
         
         /// Placeholder
-        let placeholderLabelTopConstraint = placeholderLabel.topAnchor.constraint(equalTo: topAnchor)
         let placeholderLabelLeadingConstraint = placeholderLabel.leadingAnchor.constraint(equalTo: separator.leadingAnchor)
         let placeholderLabelTrailingConstraint = placeholderLabel.trailingAnchor.constraint(equalTo: separator.trailingAnchor)
 
@@ -226,20 +278,17 @@ public final class TTextField: UITextField {
         NSLayoutConstraint.activate([placeholderLabelTopConstraint,
                                      placeholderLabelLeadingConstraint,
                                      placeholderLabelTrailingConstraint,
-                                     placeholderLabelHeightConstraint,
                                      separatorHeightConstraint,
                                      separatorLeadingConstraint,
                                      separatorTrailingConstraint,
                                      separatorBottomConstraint,
-                                     hintLabelHeightConstraint,
                                      hintLabelLeadingConstraint,
                                      hintLabelTrailingConstraint,
                                      hintLabelTopConstraint])
     }
-    
+
     // MARK: - Styling
     private func style() {
-        separator.backgroundColor = .systemRed
         hintLabel.font = UIFont.systemFont(ofSize: 13)
     }
     
@@ -250,12 +299,14 @@ public final class TTextField: UITextField {
     }
     
     // MARK: - Focus changes
-    public override func becomeFirstResponder() -> Bool {
+    @discardableResult
+    open override func becomeFirstResponder() -> Bool {
         defer { updatePlaceholderConstraints() }
         return super.becomeFirstResponder()
     }
     
-    public override func resignFirstResponder() -> Bool {
+    @discardableResult
+    open override func resignFirstResponder() -> Bool {
         defer { updatePlaceholderConstraints() }
         return super.resignFirstResponder()
     }
@@ -263,61 +314,83 @@ public final class TTextField: UITextField {
 
 // MARK: - Padding
 extension TTextField {
-    public override func textRect(forBounds bounds: CGRect) -> CGRect {
-        return UIEdgeInsetsInsetRect(bounds, padding)
-    }
 
-    public override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
-        return UIEdgeInsetsInsetRect(bounds, padding)
+    public override func textRect(forBounds bounds: CGRect) -> CGRect {
+        return editingText(forBounds: bounds)
     }
 
     public override func editingRect(forBounds bounds: CGRect) -> CGRect {
-        return UIEdgeInsetsInsetRect(bounds, padding)
+        return editingText(forBounds: bounds)
+    }
+    
+    private func editingText(forBounds bounds: CGRect) -> CGRect {
+        return bounds.inset(by: padding)
+    }
+
+    public override func leftViewRect(forBounds bounds: CGRect) -> CGRect {
+        return leftRightViewRect(forRect: super.leftViewRect(forBounds: bounds))
+    }
+
+    public override func rightViewRect(forBounds bounds: CGRect) -> CGRect {
+        return leftRightViewRect(forRect: super.rightViewRect(forBounds: bounds))
+    }
+
+    private func leftRightViewRect(forRect rect: CGRect) -> CGRect {
+        
+        let textHeight = Constant.heightMeasurementSampleText.size(using: font).height
+        let size = rect.size
+        let y = placeholderOnTopRectHeight + 0.5 * (textHeight - size.height)
+        let rect = CGRect(origin: CGPoint(x: rect.origin.x, y: y), size: size)
+        
+        return rect
     }
 }
 
 // MARK: - Helper
 extension TTextField {
+
     private var hintLabelHeight: CGFloat {
         guard hintLabel.font != nil else { return 0 }
-        return hintLabel.textHeight + Constant.Hint.verticalPadding
+        return hintLabel.textHeight + hintOffset
     }
     
     private var hintAvailable: Bool {
-        return !hintLabel.isHidden && !(hintLabel.text ?? "").isEmpty
+        return !hintLabel.isHidden && hintLabel.text != nil
     }
     
     private func updateBottomConstraints() {
         if hintAvailable {
-            hintLabelHeightConstraint.constant = hintLabelHeight
             separatorBottomConstraint.constant = -hintLabelHeight
         } else {
             separatorBottomConstraint.constant = 0
         }
         
+        invalidateIntrinsicContentSize()
         setNeedsLayout()
     }
 
     private var placeholderHeight: CGFloat {
 
-        if isPlaceholderOnTop || isEmpty {
-            return placeholderLabel.textHeight
+        if placeholderMode != .simple {
+            return placeholder?.size(using: onTopPlaceholderFont).height ?? .zero
         } else {
             return .zero
         }
     }
     
     private var placeholderOnTopRectHeight: CGFloat {
-        guard isPlaceholderOnTop else { return .zero }
-        return placeholderHeight + Constant.Placeholder.verticalPadding
+        guard placeholderMode != .simple else { return .zero }
+        return placeholderHeight + onTopPlaceholderOffset
     }
 
     private func updatePlaceholderConstraints() {
         placeholderLabel.font = isPlaceholderOnTop ? onTopPlaceholderFont : placeholderFont
         placeholderLabel.textColor = isPlaceholderOnTop ? onTopPlaceholderColor : placeholderColor
-        placeholderLabelHeightConstraint.constant = placeholderHeight
-        placeholderTopConstraint.isActive = isPlaceholderOnTop
-        placeholderBottomConstraint.isActive = !placeholderTopConstraint.isActive
+        placeholderLabelTopConstraint.isActive = isPlaceholderOnTop || !hasIntrinsicHeight
+        placeholderLabelBottomConstraint.constant = -bottomTextPadding
+        placeholderLabelBottomConstraint.isActive = !isPlaceholderOnTop
+        placeholderLabel.isHidden = !isPlaceholderOnTop && !isEmpty
+        invalidateIntrinsicContentSize()
         setNeedsLayout()
     }
 
@@ -340,7 +413,9 @@ extension TTextField {
 }
 
 private extension String {
-    func size(using font: UIFont, availableWidth: CGFloat = .greatestFiniteMagnitude) -> CGSize {
+    func size(using font: UIFont?, availableWidth: CGFloat = .greatestFiniteMagnitude) -> CGSize {
+        
+        guard let font = font else { return .zero }
         let size = CGSize(width: availableWidth, height: .greatestFiniteMagnitude)
         let options: NSStringDrawingOptions = [ .usesLineFragmentOrigin, .usesFontLeading ]
         let boundingRect = self.boundingRect(with: size, options: options, attributes: [ .font: font ], context: nil)
@@ -352,7 +427,7 @@ private extension String {
 
 private extension UILabel {
     var textHeight: CGFloat {
-        guard let font = font, let text = text else { return .zero }
+        guard let text = text else { return .zero }
         let width = superview?.bounds.width ??  .greatestFiniteMagnitude
         return text.size(using: font, availableWidth: width).height
     }
